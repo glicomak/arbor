@@ -1,3 +1,10 @@
+@import "tailwindcss";
+@import "tailwindcss-primeui";
+
 body {
-  font-family: sans-serif;
+  margin: 2rem;
+}
+
+h1 {
+  @apply m-4 text-[var(--p-text-color)] text-3xl font-medium;
 }

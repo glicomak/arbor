@@ -1,12 +1,11 @@
-<template>
-  <Menubar :model="items" />
-  <slot />
-</template>
-
 <script setup>
 const items = ref([
-  { label: 'Arbor' },
-  { label: 'Courses' },
-  { label: 'Degrees' }
+  { label: "Arbor" },
+  { label: "Programs" }
 ]);
 </script>
+
+<template>
+  <Menubar :model="items" class="font-medium" />
+  <slot />
+</template>
