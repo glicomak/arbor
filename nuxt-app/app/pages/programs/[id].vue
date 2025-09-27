@@ -1,13 +1,16 @@
 <script setup>
-const { data: courses } = useFetch("/api/courses");
+const route = useRoute();
+const programId = route.params.id;
+
+const { data: program } = useFetch(`/api/programs/${programId}`);
 </script>
 
 <template>
-  <h1>Courses</h1>
-  <div class="grid grid-cols-4 gap-4">
-    <div v-if="courses == undefined"></div>
-    <div v-else>
-      <Card v-for="course in courses">
+  <div v-if="program == undefined"></div>
+  <div v-else>
+    <h1>{{ program.name }}</h1>
+    <div class="grid grid-cols-4 gap-4">
+      <Card v-for="course in program.courses">
         <template #title>{{ course.name }}</template>
         <template #subtitle>{{ course.program.name }}</template>
         <template #content>
