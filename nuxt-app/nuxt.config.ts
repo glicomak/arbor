@@ -3,7 +3,10 @@ import tailwindcss from '@tailwindcss/vite';
 
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
-  css: ['~/assets/css/main.css'],
+  css: [
+    'primeicons/primeicons.css',
+    '~/assets/css/main.css'
+  ],
   devtools: { enabled: true },
   modules: [
     ['@primevue/nuxt-module', {
@@ -11,7 +14,7 @@ export default defineNuxtConfig({
         theme: {
           preset: Aura,
           options: {
-            darkModeSelector: false
+            darkModeSelector: '.my-app-dark'
           }
         }
       }

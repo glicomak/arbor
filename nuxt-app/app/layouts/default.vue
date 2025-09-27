@@ -3,6 +3,21 @@ const items = ref([
   { label: "Arbor", route: "/" },
   { label: "Programs", route: "/programs" }
 ]);
+
+const isLightMode = ref(true);
+
+onMounted(() => {
+  const storedMode = localStorage.getItem("mode");
+  if (storedMode == "dark") {
+    toggleMode();
+  }
+});
+
+function toggleMode() {
+  document.documentElement.classList.toggle("my-app-dark");
+  isLightMode.value = !isLightMode.value;
+  localStorage.setItem("mode", "dark");
+}
 </script>
 
 <template>
@@ -13,6 +28,9 @@ const items = ref([
           <span>{{ item.label }}</span>
         </a>
       </router-link>
+    </template>
+    <template #end>
+      <Button :icon="'pi ' + (isLightMode ? 'pi-sun' : 'pi-moon')" @click="toggleMode" class="p-button-text p-button-secondary" />
     </template>
   </Menubar>
   <slot />
