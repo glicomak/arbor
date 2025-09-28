@@ -6,5 +6,9 @@ body {
 }
 
 h1 {
-  @apply m-4 text-[var(--p-text-color)] text-3xl font-medium;
+  @apply text-[var(--p-text-color)] text-3xl font-medium;
+}
+
+.text h1, .text p {
+  @apply mx-4 my-6;
 }

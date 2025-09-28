@@ -7,10 +7,12 @@ function viewProgram(programId) {
 </script>
 
 <template>
-  <h1>Programs</h1>
-  <div class="grid grid-cols-4 gap-4">
-    <div v-if="programs == undefined"></div>
-    <div v-else>
+  <div class="text">
+    <h1>Programs</h1>
+  </div>
+  <div v-if="programs == undefined" />
+  <div v-else>
+    <div class="grid grid-cols-4 gap-4">
       <Card v-for="program in programs">
         <template #title>{{ program.name }}</template>
         <template #content>
