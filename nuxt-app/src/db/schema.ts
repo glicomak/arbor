@@ -1,10 +1,15 @@
-import { serial, integer, pgTable, varchar, boolean, text } from "drizzle-orm/pg-core";
+import { integer, pgTable, serial, text, varchar, date } from "drizzle-orm/pg-core";
+import { relations } from "drizzle-orm";
 
 export const programsTable = pgTable("programs", {
   id: serial("id").primaryKey(),
   name: varchar("name", { length: 255 }).notNull(),
   description: text("description")
 });
+
+export const programsRelations = relations(programsTable, ({ many }) => ({
+  courses: many(coursesTable)
+}));
 
 export const coursesTable = pgTable("courses", {
   id: serial("id").primaryKey(),
@@ -13,18 +18,38 @@ export const coursesTable = pgTable("courses", {
     .references(() => programsTable.id),
   name: varchar("name", { length: 255 }).notNull(),
   description: text("description"),
-  isDraft: boolean("is_draft").default(true).notNull(),
-  credits: integer("credits").notNull()
+  credits: integer("credits").notNull(),
+  status: varchar("status", { length: 50 }).default("draft").notNull()
 });
+
+export const coursesRelations = relations(coursesTable, ({ one, many }) => ({
+  program: one(programsTable, {
+    fields: [coursesTable.programId],
+    references: [programsTable.id]
+  }),
+  weeks: many(weeksTable)
+}));
+
 
 export const weeksTable = pgTable("weeks", {
   id: serial("id").primaryKey(),
   courseId: integer("course_id")
     .notNull()
     .references(() => coursesTable.id),
-  weekIndex: integer("week_index").notNull(),
+  serial: integer("serial").notNull(),
   name: varchar("name", { length: 255 }),
+  status: varchar("status", { length: 50 }).default("pending").notNull(),
+  startDate: date("start_date")
 });
+
+export const weeksRelations = relations(weeksTable, ({ one, many }) => ({
+  course: one(coursesTable, {
+    fields: [weeksTable.courseId],
+    references: [coursesTable.id]
+  }),
+  targets: many(targetsTable)
+}));
+
 
 export const targetsTable = pgTable("targets", {
   id: serial("id").primaryKey(),
@@ -35,9 +60,9 @@ export const targetsTable = pgTable("targets", {
   status: varchar("status", { length: 50 }).default("pending").notNull()
 });
 
-export const schema = {
-  programsTable,
-  coursesTable,
-  weeksTable,
-  targetsTable
-};
+export const targetsRelations = relations(targetsTable, ({ one }) => ({
+  week: one(weeksTable, {
+    fields: [targetsTable.weekId],
+    references: [weeksTable.id]
+  })
+}));

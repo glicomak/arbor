@@ -19,7 +19,7 @@ function viewCourse(courseId) {
     <div class="grid grid-cols-4 gap-4">
       <Card v-for="course in program.courses">
         <template #title>{{ course.name }}</template>
-        <template #subtitle>{{ course.program.name }}</template>
+        <template #subtitle>{{ program.name }}</template>
         <template #content>
           <p class="m-0">{{ course.description }}</p>
         </template>
