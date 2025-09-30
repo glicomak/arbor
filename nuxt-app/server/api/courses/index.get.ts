@@ -4,11 +4,29 @@ import { asc } from "drizzle-orm";
 
 export default defineEventHandler(async (_) => {
   try {
-    const allCourses = await db.query.coursesTable.findMany({
-      with: { program: true },
+    const coursesWithWeeks = await db.query.coursesTable.findMany({
+      with: {
+        program: true,
+        weeks: true
+      },
       orderBy: [asc(coursesTable.id)]
     });
-    return allCourses;
+
+    const courses = coursesWithWeeks.map(courseWithWeeks => {
+      const totalWeeks = courseWithWeeks.weeks.length;
+      const completedWeeks = courseWithWeeks.weeks.filter(week => week.status == "complete").length;
+      const completion = (totalWeeks > 0) ? (completedWeeks / totalWeeks) : 0;
+
+      const { weeks, ...courseWithoutWeeks } = courseWithWeeks;
+      const course = {
+        ...courseWithoutWeeks,
+        completion
+      }
+
+      return course
+    });
+
+    return courses;
   } catch (error) {
     throw createError({
       statusCode: 500,

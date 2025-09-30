@@ -4,10 +4,10 @@ import { asc } from "drizzle-orm";
 
 export default defineEventHandler(async (_) => {
   try {
-    const allPrograms = await db.query.programsTable.findMany({
+    const programs = await db.query.programsTable.findMany({
       orderBy: [asc(programsTable.id)]
     });
-    return allPrograms;
+    return programs;
   } catch (error) {
     throw createError({
       statusCode: 500,

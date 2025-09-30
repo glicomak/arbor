@@ -23,19 +23,44 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const program = await db.query.programsTable.findFirst({
+    const programWithWeeks = await db.query.programsTable.findFirst({
       where: eq(programsTable.id, programId),
       with: {
-        courses: { orderBy: [asc(coursesTable.id)] }
+        courses: {
+          with: { weeks: true },
+          orderBy: [asc(coursesTable.id)]
+        }
       }
     });
 
-    if (!program) {
+    if (!programWithWeeks) {
       throw createError({
         statusCode: 404,
         statusMessage: "Not Found",
         message: `Program with ID ${programId} not found.`
       });
+    }
+
+    const coursesWithWeeks = programWithWeeks.courses;
+
+    const courses = coursesWithWeeks.map(courseWithWeeks => {
+      const totalWeeks = courseWithWeeks.weeks.length;
+      const completedWeeks = courseWithWeeks.weeks.filter(week => week.status == "complete").length;
+      const completion = (totalWeeks > 0) ? (completedWeeks / totalWeeks) : 0;
+
+      const { weeks, ...courseWithoutWeeks } = courseWithWeeks;
+      const course = {
+        ...courseWithoutWeeks,
+        completion
+      }
+
+      return course
+    });
+
+    const { courses: _, ...programWithoutCourses } = programWithWeeks;
+    const program = {
+      courses,
+      ...programWithoutCourses
     }
 
     return program;
