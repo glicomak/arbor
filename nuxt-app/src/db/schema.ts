@@ -56,6 +56,7 @@ export const targetsTable = pgTable("targets", {
   weekId: integer("week_id")
     .notNull()
     .references(() => weeksTable.id),
+  serial: integer("serial").notNull(),
   text: text("text").notNull(), 
   status: varchar("status", { length: 50 }).default("pending").notNull()
 });
