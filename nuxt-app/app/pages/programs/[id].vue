@@ -19,9 +19,9 @@ function viewCourse(courseId) {
     <div class="grid grid-cols-4 gap-4">
       <Card v-for="course in program.courses">
         <template #title>{{ course.name }}</template>
-        <template #subtitle>{{ course.program.name }}</template>
         <template #content>
           <p class="m-0">{{ course.description }}</p>
+          <ProgressBar :value="course.completion * 100" class="my-4" />
         </template>
         <template #footer>
           <div class="mt-1">

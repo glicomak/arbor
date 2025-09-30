@@ -18,6 +18,7 @@ function viewCourse(courseId) {
         <template #subtitle>{{ course.program.name }}</template>
         <template #content>
           <p class="m-0">{{ course.description }}</p>
+          <ProgressBar :value="course.completion * 100" class="my-4" />
         </template>
         <template #footer>
           <div class="mt-1">

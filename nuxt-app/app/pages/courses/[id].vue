@@ -14,10 +14,10 @@ const { data: course } = useFetch(`/api/courses/${courseId}`);
     </div>
     <Accordion :value="['0']" multiple>
       <AccordionPanel v-for="week in course.weeks" :value="week.serial">
-        <AccordionHeader>Week {{ week.serial }}</AccordionHeader>
+        <AccordionHeader>Week {{ week.serial }}: {{ week.name }}</AccordionHeader>
         <AccordionContent>
           <ul>
-            <li v-for="target in week.targets">{{ target }}</li>
+            <li v-for="target in week.targets">{{ target.text }}</li>
           </ul>
         </AccordionContent>
       </AccordionPanel>
