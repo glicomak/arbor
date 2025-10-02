@@ -1,10 +1,11 @@
-import { integer, pgTable, serial, text, varchar, date } from "drizzle-orm/pg-core";
+import { boolean, date, integer, pgTable, serial, text, varchar } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 
 export const programsTable = pgTable("programs", {
   id: serial("id").primaryKey(),
-  name: varchar("name", { length: 255 }).notNull(),
-  description: text("description")
+  name: text("name").notNull(),
+  description: text("description"),
+  isDefault: boolean("is_default").default(false)
 });
 
 export const programsRelations = relations(programsTable, ({ many }) => ({
@@ -16,10 +17,11 @@ export const coursesTable = pgTable("courses", {
   programId: integer("program_id")
     .notNull()
     .references(() => programsTable.id),
-  name: varchar("name", { length: 255 }).notNull(),
+  name: text("name").notNull(),
   description: text("description"),
+  prompt: text("prompt"),
   credits: integer("credits").notNull(),
-  status: varchar("status", { length: 50 }).default("draft").notNull()
+  status: text("status").default("draft").notNull()
 });
 
 export const coursesRelations = relations(coursesTable, ({ one, many }) => ({
@@ -37,8 +39,8 @@ export const weeksTable = pgTable("weeks", {
     .notNull()
     .references(() => coursesTable.id),
   serial: integer("serial").notNull(),
-  name: varchar("name", { length: 255 }),
-  status: varchar("status", { length: 50 }).default("pending").notNull(),
+  name: text("name"),
+  status: text("status").default("pending").notNull(),
   startDate: date("start_date")
 });
 
@@ -58,7 +60,7 @@ export const targetsTable = pgTable("targets", {
     .references(() => weeksTable.id),
   serial: integer("serial").notNull(),
   text: text("text").notNull(), 
-  status: varchar("status", { length: 50 }).default("pending").notNull()
+  status: text("status").default("pending").notNull()
 });
 
 export const targetsRelations = relations(targetsTable, ({ one }) => ({

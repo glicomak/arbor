@@ -9,6 +9,10 @@ h1 {
   @apply text-[var(--p-text-color)] text-3xl font-medium;
 }
 
+.text {
+  @apply mx-4;
+}
+
 .text h1, .text p {
-  @apply mx-4 my-6;
+  @apply my-6;
 }
