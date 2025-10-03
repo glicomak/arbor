@@ -17,14 +17,14 @@ const db = drizzle(pool, { schema: { programsTable } });
 async function main() {
   const miscellaneousProgram = {
     name: "Miscellaneous",
-    description: "A collection of general, interdisciplinary, or non-departmental courses."
+    description: "A collection of general, interdisciplinary, or non-departmental courses.",
+    isDefault: true
   };
 
   try {
-    const _ = await db
+    await db
       .insert(programsTable)
-      .values(miscellaneousProgram)
-      .returning();
+      .values(miscellaneousProgram);
   } catch (error) {
     console.error("Error: ", error);
   } finally {

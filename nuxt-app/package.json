@@ -10,6 +10,7 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@google/genai": "^1.21.0",
     "@primeuix/themes": "^1.2.3",
     "@tailwindcss/vite": "^4.1.13",
     "dotenv": "^17.2.2",
