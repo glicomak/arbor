@@ -18,8 +18,9 @@ export const coursesTable = pgTable("courses", {
     .notNull()
     .references(() => programsTable.id),
   name: text("name").notNull(),
-  description: text("description"),
+  description: text("description").notNull(),
   prompt: text("prompt"),
+  source: text("source").notNull(),
   credits: integer("credits").notNull(),
   status: text("status").default("draft").notNull()
 });
@@ -39,7 +40,7 @@ export const weeksTable = pgTable("weeks", {
     .notNull()
     .references(() => coursesTable.id),
   serial: integer("serial").notNull(),
-  name: text("name"),
+  name: text("name").notNull(),
   status: text("status").default("pending").notNull(),
   startDate: date("start_date")
 });
@@ -60,6 +61,7 @@ export const targetsTable = pgTable("targets", {
     .references(() => weeksTable.id),
   serial: integer("serial").notNull(),
   text: text("text").notNull(), 
+  source: text("source").notNull(), 
   status: text("status").default("pending").notNull()
 });
 

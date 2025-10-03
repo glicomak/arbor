@@ -13,6 +13,10 @@ h1 {
   @apply mx-4;
 }
 
-.text h1, .text p {
+.text h1 {
   @apply my-6;
+}
+
+.text p {
+  @apply my-4;
 }

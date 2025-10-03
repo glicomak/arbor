@@ -27,7 +27,8 @@ Do not overwhelm the user with requirement questions - the process must ideally 
 }
 
 If you believe that you have a reasonable amount of information already, generate the program object.
-Course descriptions are short and for the user, whereas prompts are longer.
+Course descriptions are short (20-30 words at max) and for the user, whereas prompts are longer.
+Source should be a specific book that would cover most of the course's concepts.
 Design prompts in such a way that when passed to the course designer, there is no significant overlap.
 Credits is the number of weeks divided by 4, so it should vary between 1 and 3 ideally.
 The schema for the program object is given below.
@@ -40,6 +41,7 @@ The schema for the program object is given below.
       name: string,
       description: string,
       prompt: string,
+      source: string,
       credits: integer
     }]
   }
@@ -79,7 +81,6 @@ The schema for the program object is given below.
       return newProgram;
     }
   } catch (error) {
-    console.log(error);
     throw createError({
       statusCode: 500,
       statusMessage: "Failed to counsel a new program.",
