@@ -1,6 +1,10 @@
 <script setup>
 const { data: courses } = useFetch("/api/courses");
 
+function generateCourse(courseId) {
+  navigateTo(`/courses/new/${courseId}`);
+}
+
 function viewCourse(courseId) {
   navigateTo(`/courses/${courseId}`);
 }
@@ -22,7 +26,8 @@ function viewCourse(courseId) {
         </template>
         <template #footer>
           <div class="mt-1">
-            <Button label="Open" @click="viewCourse(course.id)" class="w-full" />
+            <Button v-if="course.status == 'draft'" label="Generate" @click="generateCourse(course.id)" class="w-full" />
+            <Button v-else label="Open" @click="viewCourse(course.id)" class="w-full" />
           </div>
         </template>
       </Card>

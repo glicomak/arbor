@@ -81,8 +81,7 @@ The schema for the course object is given below.
         .values(completeCourse)
         .returning({ id: coursesTable.id });
 
-      const weeksWithCourseId = weeks.map((week) => ({ ...week, courseId: newCourse.id }));
-      for (const [index, weekWithTargets] of weeksWithCourseId.entries()) {
+      for (const [index, weekWithTargets] of weeks.entries()) {
         const { targets, ...week } = weekWithTargets;
 
         const completeWeek = { ...week, courseId: newCourse.id, serial: index+1 }
@@ -102,7 +101,7 @@ The schema for the course object is given below.
   } catch (error) {
     throw createError({
       statusCode: 500,
-      statusMessage: "Failed to counsel a new program.",
+      statusMessage: "Failed to counsel a new course.",
       message: "An LLM error occurred."
     });
   }
