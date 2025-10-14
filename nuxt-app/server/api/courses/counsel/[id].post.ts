@@ -1,7 +1,7 @@
 import { GoogleGenAI } from "@google/genai"
 import { db } from "~/../src/db/db";
 import { coursesTable, targetsTable, weeksTable } from "~/../src/db/schema";
-import { asc, eq } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 
 export default defineEventHandler(async (event) => {
   const idString = event.context.params?.id;
@@ -36,7 +36,7 @@ export default defineEventHandler(async (event) => {
         message: `Course with ID ${courseId} not found.`
       });
     }
-  } catch (error) {
+  } catch (error: any) {
     if (error.statusCode) {
         throw error;
     }
@@ -56,9 +56,9 @@ Credits: ${course.credits}
     `;
 
     const body = await readBody(event);
-    const requirements = body.requirements.map(item => 
-      `Question: ${item.question}\nAnswer: ${item.answer}\n`
-    ).join('\n');
+    const requirements = ((body.requirements ?? []) as { question: string; answer: string }[])
+      .map(item => `Question: ${item.question}\nAnswer: ${item.answer}\n`)
+      .join('\n');
 
     const prompt = `
 You are an AI course (collection of weeks, each week being a collection of targets) designer in an online university.
@@ -104,12 +104,13 @@ The schema for the course object is given below.
       contents: prompt
     });
 
-    const parts = rawResponse.text.match(/```json\s*([\s\S]*?)\s*```/);
+    const rawResponseText = rawResponse?.text ?? "";
+    const parts = rawResponseText.match(/```json\s*([\s\S]*?)\s*```/);
     let text;
     if (parts && parts[1]) {
         text = parts[1].trim();
     } else {
-        text = rawResponse.text.trim();
+        text = rawResponseText.trim();
     }
     const response = JSON.parse(text);
 
@@ -132,7 +133,8 @@ The schema for the course object is given below.
           .values(completeWeek)
           .returning({ id: weeksTable.id });
         
-        const completeTargets = targets.map((target, index) => ({ ...target, weekId: newWeek.id, serial: index+1 }));
+        const completeTargets = (targets as { text: string, source: string }[])
+          .map((target, index) => ({ ...target, weekId: newWeek.id, serial: index+1 }));
         await db
           .insert(targetsTable)
           .values(completeTargets)

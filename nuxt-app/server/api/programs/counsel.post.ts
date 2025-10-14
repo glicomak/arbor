@@ -1,14 +1,13 @@
 import { GoogleGenAI } from "@google/genai"
 import { db } from "~/../src/db/db";
 import { coursesTable, programsTable } from "~/../src/db/schema";
-import { asc } from "drizzle-orm";
 
 export default defineEventHandler(async (event) => {
   try {
     const body = await readBody(event);
-    const requirements = body.requirements.map(item => 
-      `Question: ${item.question}\nAnswer: ${item.answer}\n`
-    ).join('\n');
+    const requirements = ((body.requirements ?? []) as { question: string; answer: string }[])
+      .map(item => `Question: ${item.question}\nAnswer: ${item.answer}\n`)
+      .join('\n');
 
     const prompt = `
 You are an AI program (collection of courses) designer in an online university.
@@ -27,6 +26,7 @@ Do not overwhelm the user with requirement questions - the process must ideally 
 }
 
 If you believe that you have a reasonable amount of information already, generate the program object.
+Ensure that you have an idea on how many courses does the user want as a part of the program.
 Course descriptions are short (20-30 words at max) and for the user, whereas prompts are longer.
 Source should be a specific book that would cover most of the course's concepts.
 Design prompts in such a way that when passed to the course designer, there is no significant overlap.
@@ -42,7 +42,7 @@ The schema for the program object is given below.
       description: string,
       prompt: string,
       source: string,
-      credits: integer
+      credits: number
     }]
   }
 }
@@ -54,12 +54,13 @@ The schema for the program object is given below.
       contents: prompt
     });
 
-    const parts = rawResponse.text.match(/```json\s*([\s\S]*?)\s*```/);
+    const rawResponseText = rawResponse?.text ?? "";
+    const parts = rawResponseText.match(/```json\s*([\s\S]*?)\s*```/);
     let text;
     if (parts && parts[1]) {
         text = parts[1].trim();
     } else {
-        text = rawResponse.text.trim();
+        text = rawResponseText.trim();
     }
     const response = JSON.parse(text);
 
@@ -73,7 +74,14 @@ The schema for the program object is given below.
         .values(program)
         .returning({ id: programsTable.id });
 
-      const coursesWithProgramId = courses.map((course) => ({ ...course, programId: newProgram.id }));
+      const coursesWithProgramId = (courses as {
+        name: string,
+        description: string,
+        prompt: string,
+        source: string,
+        credits: number
+      }[])
+        .map((course) => ({ ...course, programId: newProgram.id }));
       await db
         .insert(coursesTable)
         .values(coursesWithProgramId)
