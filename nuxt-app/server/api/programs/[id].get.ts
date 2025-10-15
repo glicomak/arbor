@@ -1,6 +1,6 @@
 import { db } from "~/../src/db/db";
 import { coursesTable, programsTable } from "~/../src/db/schema";
-import { eq, asc } from "drizzle-orm";
+import { asc, eq } from "drizzle-orm";
 
 export default defineEventHandler(async (event) => {
   const idString = event.context.params?.id;
@@ -64,7 +64,7 @@ export default defineEventHandler(async (event) => {
     }
 
     return program;
-  } catch (error) {
+  } catch (error: any) {
     if (error.statusCode) {
         throw error;
     }
