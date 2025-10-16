@@ -2,15 +2,8 @@
 const route = useRoute();
 const programId = route.params.id;
 
-const { data: program } = useFetch(`/api/programs/${programId}`);
-
-function generateCourse(courseId) {
-  navigateTo(`/courses/new/${courseId}`);
-}
-
-function viewCourse(courseId) {
-  navigateTo(`/courses/${courseId}`);
-}
+const { data } = useFetch(`/api/programs/${programId}`);
+const program = reactive(data);
 </script>
 
 <template>
@@ -21,19 +14,7 @@ function viewCourse(courseId) {
       <p>{{ program.description }}</p>
     </div>
     <div class="grid grid-cols-4 gap-4">
-      <Card v-for="course in program.courses">
-        <template #title>{{ course.name }}</template>
-        <template #content>
-          <p class="m-0">{{ course.description }}</p>
-          <ProgressBar :value="course.completion * 100" class="my-4" />
-        </template>
-        <template #footer>
-          <div class="mt-1">
-            <Button v-if="course.status == 'draft'" label="Generate" @click="generateCourse(course.id)" class="w-full" />
-            <Button v-else label="Open" @click="viewCourse(course.id)" class="w-full" />
-          </div>
-        </template>
-      </Card>
+      <CourseCard v-for="course in program.courses" :course="course" @statusChanged="(newStatus) => course.status = newStatus" />
     </div>
   </div>
 </template>

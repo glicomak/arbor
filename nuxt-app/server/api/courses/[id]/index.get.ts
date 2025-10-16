@@ -45,7 +45,7 @@ export default defineEventHandler(async (event) => {
     return course;
   } catch (error: any) {
     if (error.statusCode) {
-        throw error;
+      throw error;
     }
 
     throw createError({

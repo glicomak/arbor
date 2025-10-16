@@ -33,7 +33,6 @@ export const coursesRelations = relations(coursesTable, ({ one, many }) => ({
   weeks: many(weeksTable)
 }));
 
-
 export const weeksTable = pgTable("weeks", {
   id: serial("id").primaryKey(),
   courseId: integer("course_id")

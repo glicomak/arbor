@@ -5,7 +5,6 @@ import { eq } from "drizzle-orm";
 
 export default defineEventHandler(async (event) => {
   const idString = event.context.params?.id;
-
   if (!idString) {
     throw createError({
       statusCode: 400,
@@ -13,7 +12,6 @@ export default defineEventHandler(async (event) => {
       message: "Course ID is missing from the request path."
     });
   }
-
   const courseId = parseInt(idString, 10);
   if (isNaN(courseId)) {
     throw createError({
@@ -143,7 +141,6 @@ The schema for the course object is given below.
       return { id: courseId };
     }
   } catch (error) {
-    console.log(error);
     throw createError({
       statusCode: 500,
       statusMessage: "Failed to counsel a new course.",

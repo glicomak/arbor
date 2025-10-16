@@ -4,7 +4,6 @@ import { asc, eq } from "drizzle-orm";
 
 export default defineEventHandler(async (event) => {
   const idString = event.context.params?.id;
-
   if (!idString) {
     throw createError({
       statusCode: 400,
@@ -12,7 +11,6 @@ export default defineEventHandler(async (event) => {
       message: "Program ID is missing from the request path."
     });
   }
-  
   const programId = parseInt(idString, 10);
   if (isNaN(programId)) {
     throw createError({
@@ -66,7 +64,7 @@ export default defineEventHandler(async (event) => {
     return program;
   } catch (error: any) {
     if (error.statusCode) {
-        throw error;
+      throw error;
     }
 
     throw createError({
