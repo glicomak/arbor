@@ -50,6 +50,7 @@ export default defineEventHandler(async (event) => {
     const courseData = `
 Name: ${course.name}
 Description: ${course.description}
+Source: ${course.source}
 Credits: ${course.credits}
     `;
 
