@@ -37,7 +37,7 @@ async function changeStatus(status) {
         <Tag v-if="course.status == 'complete'" value="COMPLETE" />
       </div>
       <p class="m-0">{{ course.description }}</p>
-      <ProgressBar :value="course.completion * 100" class="my-4" />
+      <ProgressBar :value="Math.round(course.completion * 10000) / 100" class="my-4" />
     </template>
     <template #footer>
       <div>

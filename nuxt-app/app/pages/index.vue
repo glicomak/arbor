@@ -6,7 +6,7 @@ const courses = reactive(data);
 <template>
   <div class="text">
     <h1>Courses</h1>
-    <p v-if="courses.length == 0">Create a course to get started.</p>
+    <p v-if="courses.length == 0">There are no active courses.</p>
   </div>
   <div v-if="courses == undefined"></div>
   <div v-else>
