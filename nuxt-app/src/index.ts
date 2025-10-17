@@ -1,7 +1,6 @@
 import "dotenv/config";
 import { programsTable } from "./db/schema";
 import { drizzle } from "drizzle-orm/node-postgres";
-import { eq } from "drizzle-orm";
 import { Pool } from "pg";
 
 if (!process.env.DATABASE_URL) {

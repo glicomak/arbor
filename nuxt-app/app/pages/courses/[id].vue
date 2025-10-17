@@ -2,7 +2,8 @@
 const route = useRoute();
 const courseId = route.params.id;
 
-const { data: course } = useFetch(`/api/courses/${courseId}`);
+const { data } = useFetch(`/api/courses/${courseId}`);
+const course = reactive(data);
 </script>
 
 <template>
@@ -13,15 +14,8 @@ const { data: course } = useFetch(`/api/courses/${courseId}`);
       <p>{{ course.description }}</p>
       <p><span class="font-semibold">Source: </span>{{ course.source }}</p>
     </div>
-    <Accordion :value="['0']" multiple>
-      <AccordionPanel v-for="week in course.weeks" :value="week.serial">
-        <AccordionHeader>Week {{ week.serial }}: {{ week.name }}</AccordionHeader>
-        <AccordionContent>
-          <ul>
-            <li v-for="target in week.targets" v-tooltip.top="target.source">{{ target.text }}</li>
-          </ul>
-        </AccordionContent>
-      </AccordionPanel>
+    <Accordion multiple>
+      <WeekItem v-for="week in course.weeks" :week="week" @statusChanged="(newStatus) => course.status = newStatus" />
     </Accordion>
   </div>
 </template>

@@ -1,5 +1,5 @@
 import { db } from "~/../src/db/db";
-import { coursesTable, weeksTable } from "~/../src/db/schema";
+import { coursesTable, targetsTable, weeksTable } from "~/../src/db/schema";
 import { asc, eq } from "drizzle-orm";
 
 export default defineEventHandler(async (event) => {
@@ -29,7 +29,7 @@ export default defineEventHandler(async (event) => {
         program: true,
         weeks: {
           orderBy: [asc(weeksTable.serial)], 
-          with: { targets: true }
+          with: { targets: { orderBy: [asc(targetsTable.serial)] } }
         }
       }
     });
@@ -45,7 +45,7 @@ export default defineEventHandler(async (event) => {
     return course;
   } catch (error: any) {
     if (error.statusCode) {
-        throw error;
+      throw error;
     }
 
     throw createError({

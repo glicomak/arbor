@@ -19,6 +19,10 @@ onMounted(async () => {
       answer: course.value.description
     },
     {
+      question: "Source",
+      answer: course.value.source
+    },
+    {
       question: "Credits",
       answer: course.value.credits
     }

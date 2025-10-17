@@ -1,10 +1,11 @@
 import { db } from "~/../src/db/db";
 import { coursesTable } from "~/../src/db/schema";
-import { asc } from "drizzle-orm";
+import { asc, eq } from "drizzle-orm";
 
 export default defineEventHandler(async (_) => {
   try {
     const coursesWithWeeks = await db.query.coursesTable.findMany({
+      where: eq(coursesTable.status, "active"),
       with: {
         program: true,
         weeks: true
